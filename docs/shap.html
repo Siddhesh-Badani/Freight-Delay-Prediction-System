@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHAP Analysis — Container Freight Delay Risk</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #F8FAFF;
+    color: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: #1E3A5F;
+    padding: 0 24px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.9;
+    transition: opacity 0.15s;
+  }
+
+  nav a:hover { opacity: 1; }
+
+  .page-header {
+    background: #1E3A5F;
+    color: #fff;
+    padding: 40px 24px 36px;
+    text-align: center;
+  }
+
+  .page-header .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 10px;
+  }
+
+  .page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .page-header p {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  figure {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .fig-body {
+    padding: 32px;
+    display: flex;
+    justify-content: center;
+    background: #fff;
+  }
+
+  figure img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+  }
+
+  figcaption {
+    padding: 20px 28px 24px;
+    border-top: 1px solid #f1f5f9;
+    background: #f8faff;
+  }
+
+  figcaption .cap-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+  }
+
+  figcaption p {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  .plot-number {
+    display: inline-block;
+    background: #2563EB;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  footer {
+    background: #1E3A5F;
+    color: #94a3b8;
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+  }
+
+  footer a { color: #60a5fa; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">&#8592; Back to Home</a>
+</nav>
+
+<div class="page-header">
+  <div class="label">SHAP Interpretation</div>
+  <h1>Feature Analysis</h1>
+  <p>Five plots from the gradient-boosted model. SHAP values are computed on a 1,000-record sample from the 2024 test set using TreeExplainer with a background sample drawn from training data.</p>
+</div>
+
+<main>
+
+  <figure>
+    <div class="fig-body">
+      <img src="assets/shap_summary.png" alt="SHAP beeswarm summary plot">
+    </div>
+    <figcaption>
+      <div class="plot-number">Plot 1 of 5</div>
+      <div class="cap-title">Beeswarm Summary</div>
+      <p>Each dot is one shipment from the 2024 test sample. Position on the x-axis shows how much that feature pushed the prediction toward or away from a delay. Color encodes feature value (red = high, blue = low). Features are sorted by mean absolute SHAP impact. Vessel utilization and the utilization-by-congestion interaction dominate the top.</p>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <div class="fig-body">
+      <img src="assets/shap_bar.png" alt="SHAP mean absolute value bar chart">
+    </div>
+    <figcaption>
+      <div class="plot-number">Plot 2 of 5</div>
+      <div class="cap-title">Mean Absolute SHAP Values</div>
+      <p>The average magnitude of each feature's SHAP contribution across all 1,000 test records. This is a cleaner summary than the beeswarm when comparing overall feature importance. The top five are vessel_utilization_pct, util_x_dest_congestion, carrier_ontime_rate_30d, carrier_reliability_score and dest_congestion_trend_7d. Dynamic rolling signals outrank static vessel or route attributes.</p>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <div class="fig-body">
+      <img src="assets/shap_waterfall_true_positive.png" alt="SHAP waterfall for a true positive prediction">
+    </div>
+    <figcaption>
+      <div class="plot-number">Plot 3 of 5</div>
+      <div class="cap-title">Waterfall: True Positive</div>
+      <p>A shipment the model correctly predicted as delayed, which did in fact arrive late. Each bar shows one feature's additive contribution from the base value (average model output across the training set). Red bars push the prediction higher toward delay. Blue bars push it lower. The final predicted probability lands above the 0.15 threshold for this shipment.</p>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <div class="fig-body">
+      <img src="assets/shap_waterfall_false_positive.png" alt="SHAP waterfall for a false positive prediction">
+    </div>
+    <figcaption>
+      <div class="plot-number">Plot 4 of 5</div>
+      <div class="cap-title">Waterfall: False Positive</div>
+      <p>A shipment the model predicted as delayed but which arrived on time. The features suggest genuine delay risk: high utilization, elevated destination congestion, a weak carrier 30-day rate. The ship happened to arrive on time despite those signals. At a threshold of 0.15, the model is intentionally aggressive: it catches 85% of real delays at the cost of more false alarms like this one.</p>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <div class="fig-body">
+      <img src="assets/shap_waterfall_true_negative.png" alt="SHAP waterfall for a true negative prediction">
+    </div>
+    <figcaption>
+      <div class="plot-number">Plot 5 of 5</div>
+      <div class="cap-title">Waterfall: True Negative</div>
+      <p>A shipment the model correctly predicted as on time, which did arrive on time. Here the feature contributions work in the opposite direction: a reliable carrier, low destination congestion and moderate vessel utilization all push the prediction below the threshold. This shows the model has learned that conditions genuinely reduce delay risk, not just that certain routes are always safe.</p>
+    </figcaption>
+  </figure>
+
+</main>
+
+<footer>
+  Container Freight Delay Risk &mdash; <a href="https://siddhesh.org/projects" target="_blank">siddhesh.org/projects</a>
+</footer>
+
+</body>
+</html>

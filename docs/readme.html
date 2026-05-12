@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project README — Container Freight Delay Risk</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #F8FAFF;
+    color: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: #1E3A5F;
+    padding: 0 24px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.9;
+    transition: opacity 0.15s;
+  }
+
+  nav a:hover { opacity: 1; }
+
+  .page-header {
+    background: #1E3A5F;
+    color: #fff;
+    padding: 40px 24px 36px;
+    text-align: center;
+  }
+
+  .page-header .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 10px;
+  }
+
+  .page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .page-header p {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  section {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 32px;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1E3A5F;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #eff6ff;
+  }
+
+  h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #334155;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  ul, ol {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  li {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.6;
+  }
+
+  li strong { color: #0f172a; }
+
+  code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    background: #f1f5f9;
+    color: #1E3A5F;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    margin: 12px 0;
+  }
+
+  thead th {
+    background: #1E3A5F;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  thead th:first-child { border-radius: 6px 0 0 0; }
+  thead th:last-child  { border-radius: 0 6px 0 0; }
+
+  tbody tr:nth-child(even) { background: #f8faff; }
+
+  tbody td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+  }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .result-card {
+    background: #eff6ff;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .result-card .val {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1E3A5F;
+  }
+
+  .result-card .lbl {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .limitation-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .limitation-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .limitation-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .limitation-body strong {
+    display: block;
+    font-size: 0.875rem;
+    color: #0f172a;
+    margin-bottom: 4px;
+  }
+
+  .limitation-body p {
+    font-size: 0.875rem;
+    margin: 0;
+  }
+
+  footer {
+    background: #1E3A5F;
+    color: #94a3b8;
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+  }
+
+  footer a { color: #60a5fa; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">&#8592; Back to Home</a>
+</nav>
+
+<div class="page-header">
+  <div class="label">Technical Documentation</div>
+  <h1>Project README</h1>
+  <p>End-to-end ML system predicting whether a container shipment will arrive more than 24 hours late. Portfolio project covering data generation, feature engineering, training, interpretation and visualization.</p>
+</div>
+
+<main>
+
+  <section>
+    <h2>The Problem</h2>
+    <p>Ocean freight carries roughly 90% of global trade by volume. Even a moderate delay rate of 20% across hundreds of millions of container movements per year represents enormous economic cost: production line shutdowns, missed retail windows and expensive emergency air freight substitutions.</p>
+    <p>The challenge is not simply whether a shipment will be late. It is knowing three to five days before arrival which specific shipments are at elevated risk, so port agents can pre-arrange berths, ground logistics can be notified and customers can make informed decisions. That early-warning window is what this system is designed to provide.</p>
+  </section>
+
+  <section>
+    <h2>Key Results</h2>
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="val">0.71</div>
+        <div class="lbl">ROC-AUC (test 2024)</div>
+      </div>
+      <div class="result-card">
+        <div class="val">85%</div>
+        <div class="lbl">Recall at threshold</div>
+      </div>
+      <div class="result-card">
+        <div class="val">100k</div>
+        <div class="lbl">Shipment records</div>
+      </div>
+      <div class="result-card">
+        <div class="val">0.15</div>
+        <div class="lbl">GBM threshold</div>
+      </div>
+    </div>
+    <p style="margin-top: 20px;"><strong>Top delay driver: vessel utilization percentage.</strong> High utilization at berth compounds congestion risk in a way that static carrier scores alone cannot predict. Carrier reliability score and 30-day carrier on-time rate both rank in the top five.</p>
+    <p><strong>COVID-era distribution shift is real and documented:</strong> training on 2019-2022 (28.7% delay rate) and testing on 2024 (19.2%) is a genuine challenge. The centered-effect data model and SHAP analysis show the model generalizes the operational relationships rather than memorizing the era.</p>
+    <p>Threshold selected at recall &ge; 0.80 target (GBM: threshold 0.15, recall 0.85, precision 0.27). A missed delay costs more than a false alarm in port operations contexts.</p>
+  </section>
+
+  <section>
+    <h2>Tech Stack</h2>
+    <table>
+      <thead>
+        <tr><th>Layer</th><th>Technology</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Data generation</td><td>Python, NumPy, pandas</td></tr>
+        <tr><td>Feature engineering</td><td>pandas rolling windows, temporal groupby</td></tr>
+        <tr><td>Modeling</td><td>scikit-learn (Logistic Regression), LightGBM</td></tr>
+        <tr><td>Interpretation</td><td>SHAP (TreeExplainer)</td></tr>
+        <tr><td>Visualization</td><td>Plotly, matplotlib</td></tr>
+        <tr><td>Serialization</td><td>joblib</td></tr>
+        <tr><td>Notebook</td><td>Jupyter</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Project Structure</h2>
+    <pre><code>container-freight-risk/
+├── README.md
+├── requirements.txt
+├── .gitignore
+├── run_pipeline.py              Full pipeline runner
+├── data/
+│   ├── raw_shipments.csv        Auto-generated
+│   └── features.csv             Auto-generated
+├── models/
+│   ├── logreg.joblib            Auto-generated
+│   └── gbm.joblib               Auto-generated
+├── src/
+│   ├── generate_data.py         Synthetic data generator
+│   ├── features.py              Feature engineering
+│   ├── train.py                 Model training
+│   ├── evaluate.py              Threshold optimization and metrics
+│   ├── interpret.py             SHAP analysis
+│   ├── build_dashboard.py       Interactive Plotly dashboard
+│   └── build_story.py           Scroll narrative page
+└── outputs/
+    ├── dashboard.html           Interactive dashboard
+    ├── story.html               Visual story
+    ├── shap_summary.png
+    ├── shap_bar.png
+    ├── evaluation_report.md
+    └── recommendations.md</code></pre>
+  </section>
+
+  <section>
+    <h2>How to Run</h2>
+    <h3>Setup</h3>
+    <pre><code>cd container-freight-risk
+pip install -r requirements.txt</code></pre>
+
+    <h3>Full pipeline (recommended)</h3>
+    <pre><code>python run_pipeline.py</code></pre>
+    <p>Runs all seven steps in order and prints a summary of results and artifact paths when complete. Takes approximately 23 seconds.</p>
+
+    <h3>Individual steps</h3>
+    <pre><code># 1. Generate 100,000 synthetic shipments
+python src/generate_data.py
+
+# 2. Engineer features (rolling windows, interactions, flags)
+python src/features.py
+
+# 3. Train Logistic Regression and GBM with temporal split
+python src/train.py
+
+# 4. Optimize threshold and write evaluation report
+python src/evaluate.py
+
+# 5. Compute SHAP values and write recommendations
+python src/interpret.py
+
+# 6. Build interactive dashboard
+python src/build_dashboard.py
+
+# 7. Build scroll narrative story
+python src/build_story.py</code></pre>
+  </section>
+
+  <section>
+    <h2>Methodology Notes</h2>
+
+    <h3>Synthetic data generation</h3>
+    <p>The generator injects realistic delay signal: COVID-era (2020-2022) port congestion spikes, carrier reliability variance, Q4 peak season effects, Lunar New Year disruption windows and weather severity. The positive class rate targets 18-25%, consistent with published ocean freight delay statistics.</p>
+    <p>The delay probability model uses signed, centered effects. Good conditions reduce probability below the base rate; bad conditions increase it. This creates wide variance in per-shipment delay probability (SD 0.109 vs 0.033 with additive-only effects), which is what allows the model to reach ROC-AUC 0.71.</p>
+
+    <h3>Temporal feature engineering</h3>
+    <p>Every rolling and lag feature uses <code>pandas.Series.rolling()</code> with <code>closed='left'</code>, meaning the window [D-W, D) for a shipment departing on date D. The current shipment is never in its own training signal. NaN values from cold-start records are filled with population-level priors (0.20 for delay rate, 0.78 for carrier on-time rate) rather than forward-filled or interpolated, preventing any look-ahead.</p>
+
+    <h3>Strict temporal split</h3>
+    <p>Train set: 2019-2022. Validation set: 2023 (used for GBM early stopping). Test set: 2024 only. No random shuffling across time. This is the evaluation setup closest to production deployment.</p>
+
+    <h3>Recall-optimized threshold</h3>
+    <p>Default 0.50 is wrong for this problem. The threshold sweep finds the lowest value achieving recall &ge; 0.80 while maximizing precision. This is declared up front rather than tuned post-hoc on the test set.</p>
+
+    <h3>SHAP interpretation</h3>
+    <p>TreeExplainer is used on the GBM model with a background sample from the training set. SHAP values are computed on a 1,000-record sample from the 2024 test set. Waterfall plots for a true positive, false positive and true negative illustrate how individual shipment characteristics combine into a final prediction.</p>
+  </section>
+
+  <section>
+    <h2>Limitations</h2>
+    <div class="limitation-item">
+      <div class="limitation-dot"></div>
+      <div class="limitation-body">
+        <strong>Synthetic data</strong>
+        <p>The generator captures known delay patterns but cannot reproduce all idiosyncrasies of real carrier contracts, port labor agreements or vessel technical incidents.</p>
+      </div>
+    </div>
+    <div class="limitation-item">
+      <div class="limitation-dot"></div>
+      <div class="limitation-body">
+        <strong>No real-time inference layer</strong>
+        <p>The pipeline produces batch predictions. Production deployment would require a serving API, a streaming congestion index feed and a daily retraining schedule.</p>
+      </div>
+    </div>
+    <div class="limitation-item">
+      <div class="limitation-dot"></div>
+      <div class="limitation-body">
+        <strong>Static port congestion index</strong>
+        <p>In practice, port congestion is dynamic within a day. This model uses a shipment-level congestion value rather than an intraday time series.</p>
+      </div>
+    </div>
+    <div class="limitation-item">
+      <div class="limitation-dot"></div>
+      <div class="limitation-body">
+        <strong>13-port coverage</strong>
+        <p>The real ocean freight network has hundreds of ports. Expanding the port set would require re-calibrating the delay probability model in the generator.</p>
+      </div>
+    </div>
+    <div class="limitation-item">
+      <div class="limitation-dot"></div>
+      <div class="limitation-body">
+        <strong>No multi-leg routing</strong>
+        <p>Transshipment voyages with intermediate port calls introduce compounding delay risk not captured here.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Author</h2>
+    <p>Siddhesh Badani. <a href="https://siddhesh.org/projects" target="_blank" style="color:#2563EB;">siddhesh.org/projects</a></p>
+  </section>
+
+</main>
+
+<footer>
+  Container Freight Delay Risk &mdash; <a href="https://siddhesh.org/projects" target="_blank">siddhesh.org/projects</a>
+</footer>
+
+</body>
+</html>

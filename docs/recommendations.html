@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Recommendations — Container Freight Delay Risk</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #F8FAFF;
+    color: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: #1E3A5F;
+    padding: 0 24px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.9;
+    transition: opacity 0.15s;
+  }
+
+  nav a:hover { opacity: 1; }
+
+  .page-header {
+    background: #1E3A5F;
+    color: #fff;
+    padding: 40px 24px 36px;
+    text-align: center;
+  }
+
+  .page-header .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 10px;
+  }
+
+  .page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .page-header p {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  section {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 32px;
+  }
+
+  .audience-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 6px;
+    padding: 3px 10px;
+    margin-bottom: 12px;
+  }
+
+  .audience-tag.ops      { background: #eff6ff; color: #1d4ed8; }
+  .audience-tag.customer { background: #fefce8; color: #92400e; }
+  .audience-tag.shap     { background: #f0fdf4; color: #15803d; }
+
+  h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f1f5f9;
+  }
+
+  h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1E3A5F;
+    margin-top: 24px;
+    margin-bottom: 12px;
+  }
+
+  h3:first-of-type { margin-top: 0; }
+
+  p {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  ol, ul {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  li {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.6;
+  }
+
+  li strong { color: #0f172a; }
+
+  code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    background: #f1f5f9;
+    color: #1E3A5F;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    margin-top: 8px;
+    margin-bottom: 16px;
+  }
+
+  thead th {
+    background: #1E3A5F;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+  }
+
+  thead th:first-child { border-radius: 6px 0 0 0; }
+  thead th:last-child  { border-radius: 0 6px 0 0; }
+
+  tbody tr:nth-child(even) { background: #f8faff; }
+  tbody tr:hover { background: #eff6ff; }
+
+  tbody td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: top;
+  }
+
+  .highlight-box {
+    background: #eff6ff;
+    border-left: 3px solid #2563EB;
+    padding: 14px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.875rem;
+    color: #1e3a5f;
+    line-height: 1.6;
+    margin-top: 16px;
+  }
+
+  .top-features {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .feature-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .feature-rank {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #1E3A5F;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .feature-name {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.82rem;
+    color: #1E3A5F;
+    background: #eff6ff;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  footer {
+    background: #1E3A5F;
+    color: #94a3b8;
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+  }
+
+  footer a { color: #60a5fa; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">&#8592; Back to Home</a>
+</nav>
+
+<div class="page-header">
+  <div class="label">Operational Guidance</div>
+  <h1>Business Recommendations</h1>
+  <p>Prepared from SHAP analysis of the gradient-boosted delay model. All recommendations derive from features the model identified as most predictive.</p>
+</div>
+
+<main>
+
+  <section>
+    <div class="audience-tag ops">Port Operations Teams</div>
+    <h2>For Port Operations Teams</h2>
+
+    <h3>What to monitor in real time</h3>
+    <ol>
+      <li><strong>Route delay rate (30-day rolling).</strong> This is the single strongest predictor. When a route's rolling delay rate exceeds 35%, flag all departures on that lane for proactive berth pre-booking and extra buffer allocation.</li>
+      <li><strong>Destination port congestion index.</strong> When this exceeds 7.0, expect anchorage queues of 12-36 hours. Notify ground teams at the destination 5 days out.</li>
+      <li><strong>Vessel utilization above 90%.</strong> Overloaded vessels consistently arrive late. Prioritize express lanes and pre-cleared berth slots for these vessels.</li>
+      <li><strong>Carrier on-time rate (30-day).</strong> If a carrier's rolling rate drops below 65%, escalate to the carrier's operations manager. Recent performance is more predictive than annual contract scores.</li>
+      <li><strong>Weather severity above 7.</strong> North Atlantic and North Pacific corridors in winter carry the highest weather-related delay risk. Alert vessel captains and charterers when severity is forecast above 7 for the first 48 hours of a voyage.</li>
+    </ol>
+
+    <h3>Which shipments to flag for proactive handling</h3>
+    <p>Run the GBM model at least 3 days before vessel departure using available congestion indexes and weather forecasts. Flag any shipment where predicted delay probability exceeds 0.15 (the recall-optimized threshold). At this threshold the model catches 85% of actual delays. For flagged shipments, assign a dedicated port agent, pre-notify customs and arrange backup berth slots.</p>
+
+    <div class="highlight-box">
+      <strong>Threshold rationale:</strong> At 0.15, the model catches 85% of real delays with a precision of 0.27. That means roughly 1 in 4 flagged shipments actually delays. In port operations, a missed delay costs more than an unnecessary buffer day, so this tradeoff is intentional.
+    </div>
+
+    <h3>Seasonal priorities</h3>
+    <ul>
+      <li><strong>October through December:</strong> Increase staffing by 15-20% at LA, Long Beach and Rotterdam. Q4 peak shipping adds measurable delay risk even on otherwise reliable routes.</li>
+      <li><strong>Late January through February:</strong> Extend buffer days for any Asia-Pacific departure. Lunar New Year congestion ripples across the network for 3-4 weeks.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="audience-tag customer">Customer Planning Teams</div>
+    <h2>For Customer Planning Teams</h2>
+
+    <h3>How to communicate risk to shippers</h3>
+    <p>Communicate delay probability, not just a binary flag. A shipper receiving "42% delay risk" can make an informed choice about booking air freight for critical components. A binary "may be delayed" message does not.</p>
+    <p>Segment shippers by cargo declared value and use that to prioritize outreach:</p>
+
+    <table>
+      <thead>
+        <tr><th>Risk tier</th><th>Probability range</th><th>Suggested action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Low</td><td>&lt; 20%</td><td>Standard update at port arrival</td></tr>
+        <tr><td>Medium</td><td>20-40%</td><td>Proactive email 48h before ETA</td></tr>
+        <tr><td>High</td><td>&gt; 40%</td><td>Phone call + alternative routing options</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Buffer days by route category</h3>
+    <p>Based on historical delay distributions from the model's training data:</p>
+
+    <table>
+      <thead>
+        <tr><th>Route type</th><th>Base transit</th><th>Recommended buffer</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Intra-Asia (short haul)</td><td>3-7 days</td><td>+1 day</td></tr>
+        <tr><td>Asia-Middle East (medium)</td><td>12-18 days</td><td>+2 days</td></tr>
+        <tr><td>Asia-Europe (long haul)</td><td>25-35 days</td><td>+3 days</td></tr>
+        <tr><td>Transpacific (Asia-US West Coast)</td><td>14-20 days</td><td>+3-4 days in peak season</td></tr>
+        <tr><td>Asia-US East Coast</td><td>28-38 days</td><td>+3 days</td></tr>
+      </tbody>
+    </table>
+
+    <p>These buffers assume normal operations. During COVID-like disruption events, double the buffer and switch to weekly reassessment rather than per-shipment review.</p>
+
+    <h3>Proactive messaging triggers</h3>
+    <ul>
+      <li>When <code>route_delay_rate_30d</code> crosses 0.30 on the customer's regular lane, send a proactive "lane alert" notice with expected delay range.</li>
+      <li>After a delay occurs, use the carrier's 30-day rolling rate to advise on whether to switch carriers for the next booking cycle.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="audience-tag shap">SHAP Analysis</div>
+    <h2>Top 5 Delay Drivers</h2>
+    <p>These features appear at the top of the SHAP summary plot with the largest mean absolute impact. Route history, destination congestion and carrier recent performance dominate. Static features like transit distance matter less than dynamic real-time signals.</p>
+    <div class="top-features">
+      <div class="feature-row">
+        <div class="feature-rank">1</div>
+        <div class="feature-name">vessel_utilization_pct</div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-rank">2</div>
+        <div class="feature-name">util_x_dest_congestion</div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-rank">3</div>
+        <div class="feature-name">carrier_ontime_rate_30d</div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-rank">4</div>
+        <div class="feature-name">carrier_reliability_score</div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-rank">5</div>
+        <div class="feature-name">dest_congestion_trend_7d</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Container Freight Delay Risk &mdash; <a href="https://siddhesh.org/projects" target="_blank">siddhesh.org/projects</a>
+</footer>
+
+</body>
+</html>

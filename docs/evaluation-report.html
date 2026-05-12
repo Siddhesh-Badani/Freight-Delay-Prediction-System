@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluation Report — Container Freight Delay Risk</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #F8FAFF;
+    color: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: #1E3A5F;
+    padding: 0 24px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.9;
+    transition: opacity 0.15s;
+  }
+
+  nav a:hover { opacity: 1; }
+
+  .page-header {
+    background: #1E3A5F;
+    color: #fff;
+    padding: 40px 24px 36px;
+    text-align: center;
+  }
+
+  .page-header .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 10px;
+  }
+
+  .page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .page-header p {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  section {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 32px;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1E3A5F;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #eff6ff;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    margin-top: 4px;
+  }
+
+  thead th {
+    background: #1E3A5F;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+  }
+
+  thead th:first-child { border-radius: 6px 0 0 0; }
+  thead th:last-child  { border-radius: 0 6px 0 0; }
+
+  tbody tr:nth-child(even) { background: #f8faff; }
+  tbody tr:hover { background: #eff6ff; }
+
+  tbody td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: top;
+  }
+
+  tbody td:first-child { font-weight: 500; }
+
+  code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    background: #f1f5f9;
+    color: #1E3A5F;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin-top: 4px;
+  }
+
+  .note {
+    background: #eff6ff;
+    border-left: 3px solid #2563EB;
+    padding: 14px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.875rem;
+    color: #1e3a5f;
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+
+  .feature-tag {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.78rem;
+    color: #1E3A5F;
+  }
+
+  footer {
+    background: #1E3A5F;
+    color: #94a3b8;
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+  }
+
+  footer a { color: #60a5fa; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">&#8592; Back to Home</a>
+</nav>
+
+<div class="page-header">
+  <div class="label">Model Evaluation</div>
+  <h1>Evaluation Report</h1>
+  <p>Two models on a temporal split of 100,000 synthetic ocean freight shipments. Task: binary classification predicting arrival delay beyond 24 hours.</p>
+</div>
+
+<main>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Threshold optimization targets recall &ge; 0.80. Operations teams lose more value from a missed delay (no buffer arranged, customer complaints, re-routing costs) than from a false alarm (an unnecessary buffer day). The threshold is declared before evaluating the test set, not tuned post-hoc.</p>
+  </section>
+
+  <section>
+    <h2>Temporal Split</h2>
+    <table>
+      <thead>
+        <tr><th>Split</th><th>Years</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Train</td><td>2019-2022</td><td>Model fitting including COVID disruption era</td></tr>
+        <tr><td>Validation</td><td>2023</td><td>Hyperparameter tuning and early stopping</td></tr>
+        <tr><td>Test</td><td>2024</td><td>Final held-out evaluation, never seen during training</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Model Results on Test Set</h2>
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Logistic Regression</th><th>Gradient-Boosted Trees</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>ROC-AUC</td><td>0.7098</td><td>0.7076</td></tr>
+        <tr><td>PR-AUC</td><td>0.3364</td><td>0.3331</td></tr>
+        <tr><td>Optimal threshold</td><td>0.3</td><td>0.15</td></tr>
+        <tr><td>Recall @ threshold</td><td>0.8638</td><td>0.8499</td></tr>
+        <tr><td>Precision @ threshold</td><td>0.263</td><td>0.2675</td></tr>
+        <tr><td>F1 @ threshold</td><td>0.4032</td><td>0.4069</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>GBM Confusion Matrix (at threshold 0.15)</h2>
+    <pre>                 Predicted On-Time   Predicted Delayed
+Actual On-Time          6,046               7,521
+Actual Delayed            485               2,746</pre>
+    <p style="margin-top:16px;">The model catches 2,746 of 3,231 actual delays (recall 0.85). The 7,521 false positives represent shipments flagged for precaution that arrived on time. At 0.15 threshold this is the intentional tradeoff: a missed delay costs more than a wasted buffer day.</p>
+  </section>
+
+  <section>
+    <h2>Threshold Sweep (GBM)</h2>
+    <table>
+      <thead>
+        <tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0.10</td><td>0.233</td><td>0.954</td><td>0.375</td></tr>
+        <tr><td><strong>0.15</strong></td><td><strong>0.267</strong></td><td><strong>0.850</strong></td><td><strong>0.407</strong></td></tr>
+        <tr><td>0.20</td><td>0.298</td><td>0.687</td><td>0.416</td></tr>
+        <tr><td>0.25</td><td>0.326</td><td>0.502</td><td>0.395</td></tr>
+        <tr><td>0.30</td><td>0.355</td><td>0.336</td><td>0.345</td></tr>
+        <tr><td>0.35</td><td>0.400</td><td>0.210</td><td>0.276</td></tr>
+        <tr><td>0.40</td><td>0.425</td><td>0.107</td><td>0.171</td></tr>
+        <tr><td>0.45</td><td>0.443</td><td>0.041</td><td>0.075</td></tr>
+        <tr><td>0.50</td><td>0.446</td><td>0.013</td><td>0.025</td></tr>
+        <tr><td>0.55+</td><td>0.000</td><td>0.000</td><td>0.000</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:16px;">Threshold 0.15 is selected: the lowest value achieving recall &ge; 0.80 while maximizing precision. F1 peaks at 0.20 (0.416) but recall drops sharply to 0.687, missing too many real delays.</p>
+  </section>
+
+  <section>
+    <h2>Feature Definitions</h2>
+    <p>All 31 features below are computed using only data available before a shipment's departure date. Rolling windows use <code>closed='left'</code> in pandas, meaning the window for departure date D spans [D-window, D), never including D itself.</p>
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>Definition</th><th>Rationale</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="feature-tag">vessel_utilization_pct</td><td>% of vessel TEU capacity loaded</td><td>Overloaded vessels have tighter margins and face more delays at berth</td></tr>
+        <tr><td class="feature-tag">origin_congestion_index</td><td>Port congestion at origin (0-10)</td><td>Congested origins cause missed departure windows</td></tr>
+        <tr><td class="feature-tag">dest_congestion_index</td><td>Port congestion at destination (0-10)</td><td>High destination congestion causes anchorage queues</td></tr>
+        <tr><td class="feature-tag">weather_severity_score</td><td>Beaufort-inspired severity (0-10)</td><td>Severe weather forces speed reductions or course changes</td></tr>
+        <tr><td class="feature-tag">carrier_reliability_score</td><td>Historical carrier on-time rate (0-100)</td><td>Structural carrier quality captures scheduling discipline</td></tr>
+        <tr><td class="feature-tag">transit_distance_nm</td><td>Great-circle distance in nautical miles</td><td>Longer routes accumulate more variance</td></tr>
+        <tr><td class="feature-tag">scheduled_transit_days</td><td>Planned voyage duration in days</td><td>Short-scheduled routes have less buffer for disruption</td></tr>
+        <tr><td class="feature-tag">vessel_capacity_teu</td><td>Vessel size in TEU</td><td>Larger vessels have complex multi-port calls</td></tr>
+        <tr><td class="feature-tag">container_count</td><td>Number of containers in this booking</td><td>Larger bookings increase loading complexity</td></tr>
+        <tr><td class="feature-tag">cargo_weight_tons</td><td>Total cargo weight</td><td>Heavier loads affect draft, speed and berth selection</td></tr>
+        <tr><td class="feature-tag">declared_value_usd</td><td>Declared cargo value</td><td>Proxy for cargo type and priority handling</td></tr>
+        <tr><td class="feature-tag">route_delay_rate_30d</td><td>30-day rolling delay rate on same route</td><td>Recent route history is the strongest available predictor</td></tr>
+        <tr><td class="feature-tag">dest_congestion_trend_7d</td><td>7-day rolling avg destination congestion</td><td>Short-term trend predicts arrival queue conditions</td></tr>
+        <tr><td class="feature-tag">carrier_ontime_rate_30d</td><td>Carrier's 30-day rolling on-time fraction</td><td>Captures recent operational volatility at the carrier level</td></tr>
+        <tr><td class="feature-tag">vessel_delay_count_90d</td><td># of vessel delays in past 90 days</td><td>Some vessels repeatedly attract delays due to maintenance issues</td></tr>
+        <tr><td class="feature-tag">month</td><td>Calendar month (1-12)</td><td>Captures seasonal loading peaks</td></tr>
+        <tr><td class="feature-tag">quarter</td><td>Calendar quarter (1-4)</td><td>Q4 peak season aggregation</td></tr>
+        <tr><td class="feature-tag">day_of_week</td><td>Day of week (0=Mon)</td><td>Weekend departures can face reduced port staffing</td></tr>
+        <tr><td class="feature-tag">is_lunar_new_year</td><td>1 if Jan 20 to Feb 28 window</td><td>Factory and port shutdowns in China disrupt Asia-Pacific routes</td></tr>
+        <tr><td class="feature-tag">is_q4_peak</td><td>1 if Oct-Dec</td><td>Holiday season dramatically increases container volumes</td></tr>
+        <tr><td class="feature-tag">distance_bucket</td><td>0=short, 1=medium, 2=long, 3=transpacific</td><td>Ordinal route-length category</td></tr>
+        <tr><td class="feature-tag">util_x_dest_congestion</td><td>vessel_utilization * dest_congestion / 100</td><td>Synergy: overloaded vessel arriving at congested port</td></tr>
+        <tr><td class="feature-tag">weather_x_route_risk</td><td>weather_severity * route_delay_rate_30d</td><td>Amplifies weather impact on already-risky routes</td></tr>
+        <tr><td class="feature-tag">congestion_delta</td><td>dest_congestion - origin_congestion</td><td>Measures relative port pressure differential</td></tr>
+        <tr><td class="feature-tag">is_reefer</td><td>1 if refrigerated container</td><td>Reefer cargo requires priority handling, adding delay risk</td></tr>
+        <tr><td class="feature-tag">is_high_utilization</td><td>1 if utilization &gt; 90%</td><td>Binary flag for extreme overload condition</td></tr>
+        <tr><td class="feature-tag">is_low_reliability_carrier</td><td>1 if reliability &lt; 65</td><td>Binary flag for structurally weak carriers</td></tr>
+        <tr><td class="feature-tag">carrier_name_enc</td><td>Label-encoded carrier</td><td>Carrier identity as ordinal category</td></tr>
+        <tr><td class="feature-tag">container_type_enc</td><td>Label-encoded container type</td><td>Container class as ordinal category</td></tr>
+        <tr><td class="feature-tag">origin_port_enc</td><td>Label-encoded origin port</td><td>Origin port as ordinal category</td></tr>
+        <tr><td class="feature-tag">destination_port_enc</td><td>Label-encoded destination port</td><td>Destination port as ordinal category</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Methodology Notes</h2>
+    <div class="note">
+      Rolling features use <code>closed='left'</code> in pandas rolling windows. The window for a shipment departing on date D spans [D-window, D), never including D itself. Cold-start NaN values are filled with population-level priors: 0.20 for delay rate, 0.78 for carrier on-time rate. Models are evaluated on 2024 data only. No information from 2024 was available during training or threshold selection.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Container Freight Delay Risk &mdash; <a href="https://siddhesh.org/projects" target="_blank">siddhesh.org/projects</a>
+</footer>
+
+</body>
+</html>

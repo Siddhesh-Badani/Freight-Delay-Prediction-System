@@ -1,0 +1,16 @@
+feature,mean_abs_shap
+vessel_utilization_pct,0.32209
+util_x_dest_congestion,0.22103
+carrier_ontime_rate_30d,0.20815
+carrier_reliability_score,0.18155
+dest_congestion_trend_7d,0.1694
+weather_severity_score,0.13171
+origin_congestion_index,0.06917
+origin_port_enc,0.05927
+destination_port_enc,0.04717
+is_high_utilization,0.04144
+dest_congestion_index,0.04123
+weather_x_route_risk,0.02814
+is_low_reliability_carrier,0.02
+month,0.01429
+congestion_delta,0.0129

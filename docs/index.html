@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Container Freight Delay Risk: Project Portfolio</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #F8FAFF;
+    color: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  header {
+    background: #1E3A5F;
+    color: #fff;
+    padding: 48px 24px 40px;
+    text-align: center;
+  }
+
+  header .label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 12px;
+  }
+
+  header h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  header p {
+    font-size: 1rem;
+    color: #cbd5e1;
+    max-width: 580px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .stats-bar {
+    background: #163150;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    border-top: 1px solid #2d4f7c;
+  }
+
+  .stat {
+    padding: 16px 32px;
+    text-align: center;
+    border-right: 1px solid #2d4f7c;
+  }
+  .stat:last-child { border-right: none; }
+
+  .stat .val {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #60a5fa;
+  }
+  .stat .lbl {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 24px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 28px 24px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: box-shadow 0.18s, border-color 0.18s, transform 0.18s;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    box-shadow: 0 8px 24px rgba(37,99,235,0.12);
+    border-color: #2563EB;
+    transform: translateY(-2px);
+  }
+
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .card-icon.blue   { background: #eff6ff; }
+  .card-icon.indigo { background: #eef2ff; }
+  .card-icon.teal   { background: #f0fdfa; }
+  .card-icon.amber  { background: #fffbeb; }
+  .card-icon.rose   { background: #fff1f2; }
+  .card-icon.violet { background: #f5f3ff; }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .card-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #2563EB;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding-top: 4px;
+  }
+
+  .card-tag::after {
+    content: '→';
+    font-size: 12px;
+  }
+
+  footer {
+    background: #1E3A5F;
+    color: #94a3b8;
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+  }
+
+  footer a {
+    color: #60a5fa;
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="label">Portfolio Project</div>
+  <h1>Container Freight Delay Risk</h1>
+  <p>An end-to-end ML system predicting whether a container shipment will arrive more than 24 hours late. Trained on a strict temporal split across 100,000 synthetic ocean freight records spanning 2019 to 2024.</p>
+</header>
+
+<div class="stats-bar">
+  <div class="stat">
+    <div class="val">0.71</div>
+    <div class="lbl">ROC-AUC</div>
+  </div>
+  <div class="stat">
+    <div class="val">85%</div>
+    <div class="lbl">Recall</div>
+  </div>
+  <div class="stat">
+    <div class="val">100k</div>
+    <div class="lbl">Records</div>
+  </div>
+  <div class="stat">
+    <div class="val">2019-2024</div>
+    <div class="lbl">Date range</div>
+  </div>
+  <div class="stat">
+    <div class="val">LightGBM</div>
+    <div class="lbl">Model</div>
+  </div>
+</div>
+
+<main>
+  <div class="section-title">Project deliverables</div>
+
+  <div class="grid">
+
+    <a class="card" href="dashboard.html">
+      <div class="card-icon blue">📊</div>
+      <div class="card-title">Interactive Dashboard</div>
+      <div class="card-desc">Six-panel Plotly dashboard covering ROC curves, precision-recall tradeoffs, confusion matrix, shipment volume by year and delay rate by carrier. Fully interactive.</div>
+      <div class="card-tag">Explore dashboard</div>
+    </a>
+
+    <a class="card" href="story.html">
+      <div class="card-icon indigo">📖</div>
+      <div class="card-title">Visual Story</div>
+      <div class="card-desc">A five-chapter scroll narrative walking through the problem, data design, model results, SHAP interpretation and business implications. Designed for non-technical readers.</div>
+      <div class="card-tag">Read the story</div>
+    </a>
+
+    <a class="card" href="evaluation-report.html">
+      <div class="card-icon teal">📋</div>
+      <div class="card-title">Evaluation Report</div>
+      <div class="card-desc">Full model comparison table, confusion matrix at the recall-optimized threshold, threshold sweep across 0.10 to 0.90 and all 31 feature definitions. Logistic Regression vs GBM side by side.</div>
+      <div class="card-tag">View report</div>
+    </a>
+
+    <a class="card" href="recommendations.html">
+      <div class="card-icon amber">📌</div>
+      <div class="card-title">Business Recommendations</div>
+      <div class="card-desc">Operational guidance derived from SHAP analysis. Covers real-time monitoring priorities for port operations teams and risk-tier communication templates for customer planning.</div>
+      <div class="card-tag">Read recommendations</div>
+    </a>
+
+    <a class="card" href="shap.html">
+      <div class="card-icon rose">🔍</div>
+      <div class="card-title">SHAP Analysis</div>
+      <div class="card-desc">Five plots: beeswarm summary, mean absolute impact bar chart and three waterfall charts showing how individual shipment features combine into a final prediction for a true positive, false positive and true negative.</div>
+      <div class="card-tag">View plots</div>
+    </a>
+
+    <a class="card" href="readme.html">
+      <div class="card-icon violet">📄</div>
+      <div class="card-title">Project README</div>
+      <div class="card-desc">Technical documentation covering the methodology, data generation approach, temporal feature engineering, project structure and how to reproduce the full pipeline from scratch.</div>
+      <div class="card-tag">Read docs</div>
+    </a>
+
+  </div>
+</main>
+
+<footer>
+  Built by <a href="https://siddhesh.org/projects" target="_blank">Siddhesh Badani</a>. Python, LightGBM, SHAP and Plotly.
+</footer>
+
+</body>
+</html>
